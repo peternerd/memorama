@@ -93,6 +93,10 @@ public class FrameMemorama extends JFrame implements ActionListener{
         System.out.println("Hello");
     }
     
+    /**
+     * Agrega el evento de click a cada uno de los botones generados
+     * @param components la lista de botones para agregar evento click
+     */
     public void addEvents(Component components[]){
         for(Component c:components){
             ((JButton)c).addActionListener(this);
@@ -101,27 +105,42 @@ public class FrameMemorama extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        //Obtiene todos los botones en el panel de botones
         Component[] c = pnlButtons.getComponents();
+        //obtiene el boton que lanzo el evento
         JButton btn = (JButton)e.getSource();
-      for(int i=0; i<c.length; i++){
+        //se itera sobre el total de botones
+        for(int i=0; i<c.length; i++){
+        //si el boton presionado es igual a el boton que esta en la posicion i de el panel
         if( btn.equals((JButton)c[i])){
+            //obtienen el objeto Image del memorama en la posicion i
             Image img = memorama.getImage(i);
+            //se obtiene la ruta de la imagen y se pone en el boton
             btn.setIcon(new ImageIcon(img.getPath()));
+            //inserta en la pila de pares la imagen
             pares.push(img);
+            //inserta en la pila de botones presionados el boton
             btnPressed.push(btn);
+            //aumenta el numero de clicks
             clicks++;
+            //si ya son dos clicks
             if(clicks==2){
+                //se obtienen los dos botones presionados
                 JButton btn1 = btnPressed.pop();
                 JButton btn2 = btnPressed.pop();
+                //si no son pares entonces
                 if(!isPair()){
                     JOptionPane.showMessageDialog(this, "Continua");
+                    //regresa el icono por default a los dos botones
                     btn1.setIcon(new ImageIcon(this.getClass().getResource("/com/peternerd/ui/images/poke.png")));
                     btn2.setIcon(new ImageIcon(this.getClass().getResource("/com/peternerd/ui/images/poke.png")));
                 }
                 else{
+                    //si son pares los botones se deshabilitan ambos botones
                     btn1.setEnabled(false);
                     btn2.setEnabled(false); 
                 }
+                //reinicia el numero de clicks a 0
                 clicks=0;
             }
             break;
@@ -129,9 +148,15 @@ public class FrameMemorama extends JFrame implements ActionListener{
       }
     }
     
+    /**
+     * Comprueba si las dos imagenes son iguales
+     * @return true si son pares, false si son diferentes
+     */
     public boolean isPair(){
+        //saca las dos imagenes de la pila de imagenes
         Image img1 = pares.pop();
         Image img2 = pares.pop();
+        //si la ruta de la imagen1 es igual a la ruta de la segunda imagen entonces regresa true
         if(img1.getPath().equals(img2.getPath())){
             return true;
         }
